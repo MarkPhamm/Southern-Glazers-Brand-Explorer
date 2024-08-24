@@ -5,6 +5,16 @@ Setting Up a Python Virtual Environment and Installing Dependencies
 
    ```bash
    python -m venv .venv
+   .venv\Scripts\Activate.bat
+   pip install -r requirements.txt
+
+2. **To run the Streamlit app** 
+    To run the Streamlit app in your project directory, use the following command:
+   
+   ```bash
+   python -m venv .venv
+   .venv\Scripts\Activate.bat
+   streamlit run app.py
 
 # SGWS Brand Explorer Project
 
