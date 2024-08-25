@@ -5,6 +5,7 @@ importlib-metadata==8.0.0
 ipykernel==6.29.5
 jaraco.text==3.12.1
 nbconvert==7.16.4
+openai==1.42.0
 pandas-profiling==3.2.0
 pip-chill==1.0.3
 pyodbc==5.1.0
