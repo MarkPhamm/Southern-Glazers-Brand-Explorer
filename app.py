@@ -1,5 +1,7 @@
 import pandas as pd
 import streamlit as st
+import os
+import sys
 
 
 # Set the page configuration
@@ -29,8 +31,6 @@ with col2:
 # Display the image with full width
 st.image('images/wines.jpg', caption="A variety of wines", use_column_width=True)
 
-
-
 # Use HTML to make the header larger, red, and centered
 st.markdown(
     """
@@ -39,10 +39,8 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-df = pd.read_csv('data\products.txt', delimiter='|', index_col=None)
+df = pd.read_csv('data/products.txt', delimiter='|', index_col=None)
 
-# Sidebar filters
-st.sidebar.header("Filter Options")
 
 # Sidebar filters
 st.sidebar.header("Filter Options")
@@ -53,38 +51,42 @@ item_desc_input = st.sidebar.text_input("Filter by Item Description", "")
 # Text input for `pim_tasting_notes`
 tasting_notes_input = st.sidebar.text_input("Filter by Tasting Notes", "")
 
-# Filter by `corp_item_brand_name`
-brand_options = df['corp_item_brand_name'].unique()
+# Apply initial text filters
+if item_desc_input:
+    filtered_df = df[df['item_desc'].str.contains(item_desc_input, case=False, na=False)]
+else:
+    filtered_df = df
+
+if tasting_notes_input:
+    filtered_df = filtered_df[filtered_df['pim_tasting_notes'].str.contains(tasting_notes_input, case=False, na=False)]
+
+# Update filter options based on filtered DataFrame
+brand_options = filtered_df['corp_item_brand_name'].unique()
 selected_brands = st.sidebar.multiselect("Select Brand(s)", options=brand_options, default=[])
 
-# Filter by `pim_item_class_desc`
-class_options = df['pim_item_class_desc'].unique()
+filtered_df = filtered_df[filtered_df['corp_item_brand_name'].isin(selected_brands) | (len(selected_brands) == 0)]
+
+class_options = filtered_df['pim_item_class_desc'].unique()
 selected_classes = st.sidebar.multiselect("Select Class(es)", options=class_options, default=[])
 
-# Filter by `state`
-state_options = df['state'].unique()
+filtered_df = filtered_df[filtered_df['pim_item_class_desc'].isin(selected_classes) | (len(selected_classes) == 0)]
+
+state_options = filtered_df['state'].unique()
 selected_states = st.sidebar.multiselect("Select State(s)", options=state_options, default=[])
 
-# Filter by `flavor`
-flavor_options = df['flavor'].unique()
+filtered_df = filtered_df[filtered_df['state'].isin(selected_states) | (len(selected_states) == 0)]
+
+flavor_options = filtered_df['flavor'].unique()
 selected_flavors = st.sidebar.multiselect("Select Flavor(s)", options=flavor_options, default=[])
 
-# Apply filters to DataFrame
-filtered_df = df[
-    (df['item_desc'].str.contains(item_desc_input, case=False, na=False) if item_desc_input else True) &
-    (df['pim_tasting_notes'].str.contains(tasting_notes_input, case=False, na=False) if tasting_notes_input else True) &
-    (df['corp_item_brand_name'].isin(selected_brands) | (len(selected_brands) == 0)) &
-    (df['pim_item_class_desc'].isin(selected_classes) | (len(selected_classes) == 0)) &
-    (df['state'].isin(selected_states) | (len(selected_states) == 0)) &
-    (df['flavor'].isin(selected_flavors) | (len(selected_flavors) == 0))
-]
+filtered_df = filtered_df[filtered_df['flavor'].isin(selected_flavors) | (len(selected_flavors) == 0)]
 
 # If no filters are applied, show a random sample of 10 wines
-if len(filtered_df) == len(df):
+# Display a message if no rows are found
+if filtered_df.empty:
+    st.write("No results found. Please adjust your filters.")
+elif len(filtered_df) == len(df):
     filtered_df = df.sample(n=9, random_state=1)
-
-st.text(len(df))
-st.text(len(filtered_df))
 
 # Create blocks using Streamlit's columns layout
 num_columns = 3
