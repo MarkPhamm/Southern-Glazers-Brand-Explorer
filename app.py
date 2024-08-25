@@ -6,7 +6,7 @@ import sys
 
 # Set the page configuration
 st.set_page_config(
-    page_title="Full Screen App",  # Browser tab title
+    page_title="Southern Glazers Brand Explorer",  # Browser tab title
     layout="wide",                 # Use the full width of the page
     initial_sidebar_state="expanded"  # Start with the sidebar collapsed
 )
@@ -23,7 +23,7 @@ with col2:
     # Use HTML to make the header larger and red
     st.markdown(
         """
-        <h1 style='font-size: 60px; color: red;'>Southern Glazer's Wine & Spirits Brand Explorer</h1>
+        <h1 style='font-size: 50px; color: red;'>Southern Glazer's Wine & Spirits Brand Explorer</h1>
         """,
         unsafe_allow_html=True
     )
@@ -41,6 +41,10 @@ st.markdown(
 
 df = pd.read_csv('data/products.txt', delimiter='|', index_col=None)
 
+# Sidebar filters
+st.sidebar.header("Select Pages")
+# Sidebar for page selection
+page = st.sidebar.radio("Select Page", options=["Menu Search", "Recipe Creator"])
 
 # Sidebar filters
 st.sidebar.header("Filter Options")
@@ -88,28 +92,39 @@ if filtered_df.empty:
 elif len(filtered_df) == len(df):
     filtered_df = df.sample(n=9, random_state=1)
 
-# Create blocks using Streamlit's columns layout
-num_columns = 3
-total_rows = len(filtered_df)
-num_rows = (total_rows + num_columns - 1) // num_columns  # Calculate number of rows needed
+def create_blocks(filtered_df, num_columns=3, block_height=500, margin_bottom=15):
+    """
+    Create a grid of blocks using Streamlit's columns layout.
+    
+    Parameters:
+    - filtered_df (DataFrame): The filtered DataFrame containing the data to display.
+    - num_columns (int): The number of columns in each row.
+    - block_height (int): The height of each block in pixels.
+    - margin_bottom (int): The margin (spacing) below each block in pixels.
+    """
+    total_rows = len(filtered_df)
+    num_rows = (total_rows + num_columns - 1) // num_columns  # Calculate number of rows needed
 
-for i in range(num_rows):
-    cols = st.columns(num_columns)  # Create a row with `num_columns` columns
-    for j, col in enumerate(cols):
-        idx = i * num_columns + j
-        if idx < total_rows:
-            row = filtered_df.iloc[idx]
-            with col:
-                st.markdown(f"""
-                <div style="border: 2px solid red; border-radius: 10px; padding: 15px; background-color: black; color: white; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); display: flex; flex-direction: column; justify-content: space-between; height: 400px; width: 100%;">
-                    <h3 style="margin-top: 0; color: red; text-align: center; font-size: 24px;">{row['item_desc']}</h3>
-                    <div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
-                        <p><strong>Brand Name:</strong> {row['corp_item_brand_name']}</p>
-                        <p><strong>Class:</strong> {row['pim_item_class_desc']}</p>
-                        <p><strong>Sub-Class:</strong> {row['pim_item_sub_class_desc']}</p>
-                        <p><strong>State:</strong> {row['state']}</p>
-                        <p><strong>Flavor:</strong> {row['flavor']}</p>
-                        <p><strong>Tasting Notes:</strong> {row['pim_tasting_notes'] if pd.notna(row['pim_tasting_notes']) else 'N/A'}</p>
+    for i in range(num_rows):
+        cols = st.columns(num_columns)  # Create a row with `num_columns` columns
+        for j, col in enumerate(cols):
+            idx = i * num_columns + j
+            if idx < total_rows:
+                row = filtered_df.iloc[idx]
+                with col:
+                    st.markdown(f"""
+                    <div style="border: 2px solid red; border-radius: 10px; padding: 15px; background-color: black; color: white; box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1); display: flex; flex-direction: column; justify-content: space-between; height: {block_height}px; width: 100%; margin-bottom: {margin_bottom}px;">
+                        <h3 style="margin-top: 0; color: red; text-align: center; font-size: 24px;">{row['item_desc']}</h3>
+                        <div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                            <p><strong>Brand Name:</strong> {row['corp_item_brand_name']}</p>
+                            <p><strong>Class:</strong> {row['pim_item_class_desc']}</p>
+                            <p><strong>Sub-Class:</strong> {row['pim_item_sub_class_desc']}</p>
+                            <p><strong>State:</strong> {row['state']}</p>
+                            <p><strong>Flavor:</strong> {row['flavor']}</p>
+                            <p><strong>Tasting Notes:</strong> {row['pim_tasting_notes'] if pd.notna(row['pim_tasting_notes']) else 'N/A'}</p>
+                        </div>
                     </div>
-                </div>
-                """, unsafe_allow_html=True)
+                    """, unsafe_allow_html=True)
+
+# Assuming 'filtered_df' is your filtered DataFrame
+create_blocks(filtered_df, num_columns=3, block_height=500, margin_bottom=15)
