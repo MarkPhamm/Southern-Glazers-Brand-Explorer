@@ -18,7 +18,7 @@ Setting Up a Python Virtual Environment and Installing Dependencies
 
 # SGWS Brand Explorer Project
 
-![alt text](image.png)
+![image](https://github.com/user-attachments/assets/420c9ede-909c-434f-9404-ffb88f3aeff4)
 
 **SGWS** is constantly looking for new ways to engage consumers with our supplier brands. The products we distribute are part of everyone’s celebrations in life. We want to make it easier for anyone to explore brands they love and make it fun to explore and learn new ways to enjoy with their friends and family.
 
