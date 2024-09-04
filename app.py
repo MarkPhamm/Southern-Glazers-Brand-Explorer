@@ -77,7 +77,7 @@ if not selected_brands:
     st.stop()
 
 # Display the custom header after brand selection
-st.header(f"Let's play the {', '.join(selected_brands)} game")
+st.header(f"Let's play the {', '.join(selected_brands).lower()} game")
 
 # Step 2: Balloon Pop Game
 st.header("Step 2: Pop a Balloon to Select a Flavor!")
