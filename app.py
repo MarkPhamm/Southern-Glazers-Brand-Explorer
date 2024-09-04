@@ -77,7 +77,7 @@ if not selected_brands:
     st.stop()
 
 # Display the custom header after brand selection
-st.header(f"Let's play the {', '.join(selected_brands).lower()} game")
+st.header(f"How do you like your{', '.join(selected_brands).lower()} ?")
 
 # Step 2: Balloon Pop Game
 st.header("Step 2: Pop a Balloon to Select a Flavor!")
@@ -132,7 +132,6 @@ if st.button("Submit"):
                                         <p><strong>Brand Name:</strong> {row['corp_item_brand_name']}</p>
                                         <p><strong>Class:</strong> {row['pim_item_class_desc']}</p>
                                         <p><strong>Sub-Class:</strong> {row['pim_item_sub_class_desc']}</p>
-                                        <p><strong>State:</strong> {row['state']}</p>
                                         <p><strong>Flavor:</strong> {row['flavor']}</p>
                                         <p><strong>Tasting Notes:</strong> {row['pim_tasting_notes'] if pd.notna(row['pim_tasting_notes']) else 'N/A'}</p>
                                     </div>
