@@ -1,26 +1,21 @@
 import pandas as pd
 import streamlit as st
-import os
-import sys
-
+import random
 
 # Set the page configuration
 st.set_page_config(
-    page_title="Southern Glazers Brand Explorer",  # Browser tab title
-    layout="wide",                 # Use the full width of the page
-    initial_sidebar_state="expanded"  # Start with the sidebar collapsed
+    page_title="Southern Glazers Brand Explorer",
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
 
-
 # Create columns for side-by-side layout
-col1, col2 = st.columns([0.2, 2])  # Adjust the ratio as needed
+col1, col2 = st.columns([0.2, 2])
 
 with col1:
-    # Display the image
     st.image('images/logo.png', width=100)
 
 with col2:
-    # Use HTML to make the header larger and red
     st.markdown(
         """
         <h1 style='font-size: 50px; color: red;'>Southern Glazer's Wine & Spirits Brand Explorer</h1>
@@ -28,10 +23,8 @@ with col2:
         unsafe_allow_html=True
     )
 
-# Display the image with full width
 st.image('images/wines.jpg', caption="A variety of wines", use_column_width=True)
 
-# Use HTML to make the header larger, red, and centered
 st.markdown(
     """
     <h1 style='font-size: 45px; color: red; text-align: center;'>List of Recommended Alcohols</h1>
@@ -41,90 +34,81 @@ st.markdown(
 
 df = pd.read_csv('data/products.txt', delimiter='|', index_col=None)
 
-# Sidebar filters
+# Step 1: Brand selection
 st.sidebar.header("Select Pages")
-# Sidebar for page selection
 page = st.sidebar.radio("Select Page", options=["Menu Search", "Recipe Creator"])
 
-# Sidebar filters
-st.sidebar.header("Filter Options")
+st.header("Step 1: Select Brand(s)")
+brand_options = df['corp_item_brand_name'].unique()
+selected_brands = st.multiselect("Select Brand(s)", options=brand_options, default=[])
 
-# Text input for `item_desc`
-item_desc_input = st.sidebar.text_input("Filter by Item Description", "")
+# If no brand is selected, display a message and stop execution
+if not selected_brands:
+    st.warning("Please select at least one brand to continue.")
+    st.stop()
 
-# Text input for `pim_tasting_notes`
-tasting_notes_input = st.sidebar.text_input("Filter by Tasting Notes", "")
+# Display the custom header after brand selection
+st.header(f"Let's play the {', '.join(selected_brands)} game")
 
-# Apply initial text filters
-if item_desc_input:
-    filtered_df = df[df['item_desc'].str.contains(item_desc_input, case=False, na=False)]
-else:
-    filtered_df = df
+# Step 2: Balloon Pop Game
+st.header("Step 2: Pop a Balloon to Select a Flavor!")
 
-if tasting_notes_input:
-    filtered_df = filtered_df[filtered_df['pim_tasting_notes'].str.contains(tasting_notes_input, case=False, na=False)]
+# Filtered DataFrame for selected brands
+filtered_df = df[df['corp_item_brand_name'].isin(selected_brands)]
+flavors = filtered_df['flavor'].dropna().unique()
 
-# Update filter options based on filtered DataFrame
-brand_options = filtered_df['corp_item_brand_name'].unique()
-selected_brands = st.sidebar.multiselect("Select Brand(s)", options=brand_options, default=[])
+# Shuffle flavors for random balloon placement
+flavors_shuffled = random.sample(list(flavors), len(flavors))
 
-filtered_df = filtered_df[filtered_df['corp_item_brand_name'].isin(selected_brands) | (len(selected_brands) == 0)]
+# Initialize the session state for the popped flavor
+if "popped_flavor" not in st.session_state:
+    st.session_state.popped_flavor = None
 
-class_options = filtered_df['pim_item_class_desc'].unique()
-selected_classes = st.sidebar.multiselect("Select Class(es)", options=class_options, default=[])
+# Create balloons as buttons
+cols = st.columns(5)  # Adjust the number of columns based on the number of balloons you want in a row
 
-filtered_df = filtered_df[filtered_df['pim_item_class_desc'].isin(selected_classes) | (len(selected_classes) == 0)]
+for idx, flavor in enumerate(flavors_shuffled):
+    if cols[idx % 5].button(f"🎈 Balloon {idx+1}"):
+        st.session_state.popped_flavor = flavor
 
-state_options = filtered_df['state'].unique()
-selected_states = st.sidebar.multiselect("Select State(s)", options=state_options, default=[])
+# Show the result after a balloon is popped
+if st.session_state.popped_flavor:
+    st.success(f"🎉 You popped a balloon and found the flavor: {st.session_state.popped_flavor}")
 
-filtered_df = filtered_df[filtered_df['state'].isin(selected_states) | (len(selected_states) == 0)]
+# Step 3: Submit button to filter based on the popped flavor
+if st.button("Submit"):
+    if st.session_state.popped_flavor:
+        # Apply flavor filter and other brand filters
+        filtered_df = filtered_df[filtered_df['flavor'] == st.session_state.popped_flavor]
 
-flavor_options = filtered_df['flavor'].unique()
-selected_flavors = st.sidebar.multiselect("Select Flavor(s)", options=flavor_options, default=[])
+        if filtered_df.empty:
+            st.write("No results found. Please adjust your filters.")
+        else:
+            def create_blocks(filtered_df, num_columns=3, block_height=500, margin_bottom=15):
+                total_rows = len(filtered_df)
+                num_rows = (total_rows + num_columns - 1) // num_columns
 
-filtered_df = filtered_df[filtered_df['flavor'].isin(selected_flavors) | (len(selected_flavors) == 0)]
+                for i in range(num_rows):
+                    cols = st.columns(num_columns)
+                    for j, col in enumerate(cols):
+                        idx = i * num_columns + j
+                        if idx < total_rows:
+                            row = filtered_df.iloc[idx]
+                            with col:
+                                st.markdown(f"""
+                                <div style="border: 2px solid red; border-radius: 10px; padding: 15px; background-color: black; color: white; box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1); display: flex; flex-direction: column; justify-content: space-between; height: {block_height}px; width: 100%; margin-bottom: {margin_bottom}px;">
+                                    <h3 style="margin-top: 0; color: red; text-align: center; font-size: 24px;">{row['item_desc']}</h3>
+                                    <div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                                        <p><strong>Brand Name:</strong> {row['corp_item_brand_name']}</p>
+                                        <p><strong>Class:</strong> {row['pim_item_class_desc']}</p>
+                                        <p><strong>Sub-Class:</strong> {row['pim_item_sub_class_desc']}</p>
+                                        <p><strong>State:</strong> {row['state']}</p>
+                                        <p><strong>Flavor:</strong> {row['flavor']}</p>
+                                        <p><strong>Tasting Notes:</strong> {row['pim_tasting_notes'] if pd.notna(row['pim_tasting_notes']) else 'N/A'}</p>
+                                    </div>
+                                </div>
+                                """, unsafe_allow_html=True)
 
-# If no filters are applied, show a random sample of 10 wines
-# Display a message if no rows are found
-if filtered_df.empty:
-    st.write("No results found. Please adjust your filters.")
-elif len(filtered_df) == len(df):
-    filtered_df = df.sample(n=9, random_state=1)
-
-def create_blocks(filtered_df, num_columns=3, block_height=500, margin_bottom=15):
-    """
-    Create a grid of blocks using Streamlit's columns layout.
-    
-    Parameters:
-    - filtered_df (DataFrame): The filtered DataFrame containing the data to display.
-    - num_columns (int): The number of columns in each row.
-    - block_height (int): The height of each block in pixels.
-    - margin_bottom (int): The margin (spacing) below each block in pixels.
-    """
-    total_rows = len(filtered_df)
-    num_rows = (total_rows + num_columns - 1) // num_columns  # Calculate number of rows needed
-
-    for i in range(num_rows):
-        cols = st.columns(num_columns)  # Create a row with `num_columns` columns
-        for j, col in enumerate(cols):
-            idx = i * num_columns + j
-            if idx < total_rows:
-                row = filtered_df.iloc[idx]
-                with col:
-                    st.markdown(f"""
-                    <div style="border: 2px solid red; border-radius: 10px; padding: 15px; background-color: black; color: white; box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1); display: flex; flex-direction: column; justify-content: space-between; height: {block_height}px; width: 100%; margin-bottom: {margin_bottom}px;">
-                        <h3 style="margin-top: 0; color: red; text-align: center; font-size: 24px;">{row['item_desc']}</h3>
-                        <div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
-                            <p><strong>Brand Name:</strong> {row['corp_item_brand_name']}</p>
-                            <p><strong>Class:</strong> {row['pim_item_class_desc']}</p>
-                            <p><strong>Sub-Class:</strong> {row['pim_item_sub_class_desc']}</p>
-                            <p><strong>State:</strong> {row['state']}</p>
-                            <p><strong>Flavor:</strong> {row['flavor']}</p>
-                            <p><strong>Tasting Notes:</strong> {row['pim_tasting_notes'] if pd.notna(row['pim_tasting_notes']) else 'N/A'}</p>
-                        </div>
-                    </div>
-                    """, unsafe_allow_html=True)
-
-# Assuming 'filtered_df' is your filtered DataFrame
-create_blocks(filtered_df, num_columns=3, block_height=500, margin_bottom=15)
+            create_blocks(filtered_df, num_columns=3, block_height=500, margin_bottom=15)
+    else:
+        st.warning("Please pop a balloon to select a flavor first.")
