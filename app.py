@@ -37,6 +37,35 @@ df = pd.read_csv('data/products.txt', delimiter='|', index_col=None)
 # Step 1: Brand selection
 st.sidebar.header("Select Pages")
 page = st.sidebar.radio("Select Page", options=["Menu Search", "Recipe Creator"])
+st.sidebar.form("Insert a drink name for cocktail recipe")
+
+if page == "Recipe Creator":
+    # Initialize chat history in the sidebar
+    if 'chat_history' not in st.session_state:
+        st.session_state.chat_history = []
+
+    # Sidebar form for inserting a drink name
+    with st.sidebar.form("insert_drink_form"):
+        drink_name = st.text_input("Insert a drink name for cocktail recipe")
+        submit_button = st.form_submit_button("Submit")
+        
+        if submit_button:
+            st.sidebar.write(f"Drink name submitted: {drink_name}")
+
+    # Sidebar chat interface
+    st.sidebar.header("Chat Interface")
+
+    # Input and submit button
+    user_input = st.sidebar.text_input("Type your message:")
+    if st.sidebar.button("Send"):
+        if user_input:
+            st.session_state.chat_history.append(f"You: {user_input}")
+            # Simulate a response (replace with actual logic as needed)
+            st.session_state.chat_history.append(f"Bot: Here's a response to '{user_input}'")
+
+    # Display chat history in the sidebar
+    for message in st.session_state.chat_history:
+        st.sidebar.write(message)
 
 st.header("Step 1: Select Brand(s)")
 brand_options = df['corp_item_brand_name'].unique()
@@ -77,6 +106,7 @@ if st.session_state.popped_flavor:
 
 # Step 3: Submit button to filter based on the popped flavor
 if st.button("Submit"):
+    st.header(F"Here's your customize recommendations")
     if st.session_state.popped_flavor:
         # Apply flavor filter and other brand filters
         filtered_df = filtered_df[filtered_df['flavor'] == st.session_state.popped_flavor]
