@@ -45,10 +45,10 @@ page = st.sidebar.radio("Select Page", options=["Menu Search", "Further Wine rec
 df = pd.read_csv('data/products.csv', index_col=None)
 
 if page == "Menu Search":
-    tabs.menu.display_menu(df)
+    tabs.menu.main()
 
 elif page == "Further Wine recommendation":
-    tabs.recommendation.display_recommendation(df)
+    tabs.recommendation.main()
 
-elif page == "Recipe Creator":
-    tabs.recipe.chatbot_page()
+# elif page == "Recipe Creator":
+#     tabs.recipe.chatbot_page()

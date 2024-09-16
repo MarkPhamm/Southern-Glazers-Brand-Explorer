@@ -3,6 +3,19 @@ import streamlit as st
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics.pairwise import cosine_similarity
 
+import os
+import sys
+
+# Get the current working directory
+current_dir = os.getcwd()
+# Change directory into db directory
+data_dir = os.path.join(current_dir, 'data')
+
+@st.cache_data
+def load_data():
+    df = pd.read_csv(os.path.join(data_dir, 'products.csv'))
+    return df
+
 # Define the recommend_wines function
 def recommend_wines(df, item_desc):
     features = ['alcohol_percentage', 'sweetness_level', 'bitterness_level', 'acidity_level', 'tannin_level', 'serving_temperature', 'price']
@@ -71,3 +84,11 @@ def display_recommendation(df):
         else:
             st.write("Top wine recommendations:")
             create_blocks(recommendations )
+
+def main():
+    df = load_data()
+    display_recommendation(df)
+
+
+if __name__ == "__main__":
+    main()
