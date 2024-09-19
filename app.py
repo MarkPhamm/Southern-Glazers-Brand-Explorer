@@ -5,8 +5,8 @@ import random
 import model.wine_rec
 
 import tabs.menu
-import tabs.recommendation
-import tabs.recipe
+# import tabs.recommendation
+# import tabs.recipe
 
 # Set the page configuration
 st.set_page_config(
@@ -47,8 +47,8 @@ df = pd.read_csv('data/products.csv', index_col=None)
 if page == "Menu Search":
     tabs.menu.main()
 
-elif page == "Further Wine recommendation":
-    tabs.recommendation.main()
+# elif page == "Further Wine recommendation":
+#     tabs.recommendation.main()
 
 # elif page == "Recipe Creator":
 #     tabs.recipe.chatbot_page()
