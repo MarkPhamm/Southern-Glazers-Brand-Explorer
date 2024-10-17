@@ -116,7 +116,7 @@
     ".next/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx"
-, "app/test.js"  ],
+, "app/test.js", "app/menu-search/page.jsx"  ],
   "exclude": [
     "node_modules"
   ],
