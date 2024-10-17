@@ -28,8 +28,15 @@ export default function FormDataComponent() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('/api/submit', formData);
+      const res = await axios.post('/api/menu-search', formData);
       setResponse(res.data);
+      /*
+      {
+        "name": "John Doe",
+        "email": "john@example.com"
+        
+      }
+      */
     } catch (error) {
       console.error('Error submitting form:', error);
     }
