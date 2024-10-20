@@ -1,10 +1,11 @@
 .venv
+venv
 .env.*
 .next
 db_config.py
 __pycache__/db_config.cpython-311.pyc
 node_modules
-**/__pycache__/
+*/__pycache__/
 __pycache__/
 test.*
 tsconfig.json
