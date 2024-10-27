@@ -3,8 +3,7 @@ import streamlit as st
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics.pairwise import cosine_similarity
 
-import os
-import sys
+import os,sys
 
 # Get the current working directory
 current_dir = os.getcwd()

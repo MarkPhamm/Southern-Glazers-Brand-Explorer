@@ -1,21 +1,8 @@
 import streamlit as st
 from openai import OpenAI
-import os
-import config
-from dotenv import load_dotenv
+import utils.utils as utils 
 
-if config.deploy:
-    openai_api_key = st.secrets["OPENAI_KEY"]
-else:
-    load_dotenv()
-    openai_api_key = os.getenv('OPENAI_KEY')
-
-client = OpenAI(api_key=openai_api_key)
-
-# Use the more cost-effective gpt-3.5-turbo model
-model = "gpt-3.5-turbo"
-
-def get_ai_response(messages):
+def get_ai_response(messages, model, client):
     chat_completion = client.chat.completions.create(
         model=model,
         messages=messages,
@@ -24,13 +11,27 @@ def get_ai_response(messages):
     )
     return chat_completion.choices[0].message.content
 
-# Streamlit page for the chatbot interaction
-def chatbot_page():
+
+def main():
+    utils.render_header()
+    utils.render_main_image()
+    # Streamlit page for the chatbot interaction
     st.title("🍷 Wine ChatBot - Recipe Suggestions")
     st.markdown("""
     Welcome to the Wine ChatBot! Here, you can explore a variety of wine options, get personalized recipe suggestions, and ask questions you may have about wines and cocktails. Whether you're looking for the perfect pairing or a new cocktail recipe, I'm here to help you discover the best options!
     """)
     
+    # Let the user input the OpenAI key
+    openai_api_key = st.text_input("Enter your OpenAI API Key:", type="password")
+
+    if openai_api_key:
+        client = OpenAI(api_key=openai_api_key)
+    else:
+        st.warning("Please enter your OpenAI API Key to use the chatbot.")
+        st.stop()
+
+    # Use the more cost-effective gpt-3.5-turbo model
+    model = "gpt-3.5-turbo"
     # Initialize chat history in session state if it doesn't exist
     if 'chat_history' not in st.session_state:
         st.session_state.chat_history = []
@@ -57,7 +58,7 @@ def chatbot_page():
         ] + st.session_state.chat_history
         
         # Get AI response
-        ai_response = get_ai_response(messages)
+        ai_response = get_ai_response(messages, model, client)
         
         # Add AI response to chat history
         st.session_state.chat_history.append({"role": "assistant", "content": ai_response})
@@ -70,9 +71,6 @@ def chatbot_page():
     if st.button("Clear Chat History"):
         st.session_state.chat_history = []
         st.experimental_rerun()
-
-def main():
-    chatbot_page()
 
 if __name__ == "__main__":
     main()
