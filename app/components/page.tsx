@@ -58,13 +58,15 @@ const CombinedWineComponent = () => {
 
       {/* Sweetness and Bitterness Slider Section */}
       <div style={{ marginBottom: "40px" }}>
-        <h2>Select Sweetness and Bitterness Levels</h2>
+        <h2>This or That</h2>
 
         <div>
           <h3>Sweetness Level: {sweetnessLevel}</h3>
-          <div style={{ display: "flex", justifyContent: "space-between", width: "300px" }}>
-            <span>Not Sweet</span>
-            <span>Very Sweet</span>
+          <div style={{ display: "flex", justifyContent: "space-around", justifyItems: "center" }}>
+            <div style={{width: "50rem", display: "flex", justifyContent: "space-around"}}>
+              <p>Not Sweet</p>
+              <p>Very Sweet</p>
+            </div>
           </div>
           <input
             type="range"
@@ -78,9 +80,11 @@ const CombinedWineComponent = () => {
 
         <div>
           <h3>Bitterness Level: {bitternessLevel}</h3>
-          <div style={{ display: "flex", justifyContent: "space-between", width: "300px" }}>
-            <span>Not Bitter</span>
-            <span>Very Bitter</span>
+          <div style={{ display: "flex", justifyContent: "space-around", justifyItems: "center" }}>
+            <div style={{width: "50rem", display: "flex", justifyContent: "space-around"}}>
+              <p>Not Bitter</p>
+              <p>Very Bitter</p>
+            </div>
           </div>
           <input
             type="range"
