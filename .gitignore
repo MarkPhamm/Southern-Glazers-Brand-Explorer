@@ -11,3 +11,4 @@ test.*
 tsconfig.json
 tailwind.config.js
 *.pyc
+.env
