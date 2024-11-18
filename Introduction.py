@@ -24,9 +24,6 @@ def main():
 
     Welcome to the **SGWS Brand Explorer**! 🎉 Dive into an engaging experience that allows you to explore your favorite brands and discover new ways to enjoy their products.
 
-    ## 🎯 Project Overview
-    SGWS aims to enhance consumer engagement with our supplier brands. Our products are part of everyone’s celebrations, and we're here to make it easier and more fun for you to explore and learn.
-
     ## 🍹 How It Works
     1. **Select Your Brand**: Choose a product from a brand family (e.g., **Crown Royal Blackberry**).
     2. **Customize Your Experience**: Play games to explore flavors, themes, and occasions.

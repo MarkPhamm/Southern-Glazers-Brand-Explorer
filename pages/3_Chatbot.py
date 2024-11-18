@@ -70,7 +70,7 @@ def main():
     # Add a button to clear chat history
     if st.button("Clear Chat History"):
         st.session_state.chat_history = []
-        st.experimental_rerun()
+        st.rerun()
 
 if __name__ == "__main__":
     main()

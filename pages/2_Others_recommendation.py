@@ -18,8 +18,8 @@ def load_data():
     df = pd.read_csv(os.path.join(data_dir, 'products.csv'))
     return df
 
-# Define the recommend_wines function
-def recommend_wines(df, item_desc):
+# Define the recommend_drinks function
+def recommend_drinks(df, item_desc):
     features = ['alcohol_percentage', 'sweetness_level', 'bitterness_level', 'acidity_level', 'tannin_level', 'serving_temperature', 'price']
     
     # Fill missing values with column mean
@@ -29,7 +29,7 @@ def recommend_wines(df, item_desc):
     scaler = StandardScaler()
     df_scaled = scaler.fit_transform(df[features])
     
-    # Find the index of the input wine
+    # Find the index of the input drink
     idx = df.index[df['item_desc'] == item_desc].tolist()
     
     if not idx:
@@ -42,7 +42,7 @@ def recommend_wines(df, item_desc):
     sim_scores = list(enumerate(cosine_sim[idx]))
     sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
     
-    # Get top 3 most similar wines (excluding the input wine itself)
+    # Get top 3 most similar drinks (excluding the input drink itself)
     top_indices = [i[0] for i in sim_scores[1:4]]
     recommendations = df.iloc[top_indices]
     
@@ -72,32 +72,32 @@ def create_blocks(filtered_df, num_columns=3, block_height=250, margin_bottom=15
 
 # Streamlit app
 def display_recommendation(df):
-    st.title("Wine Recommendation System")
+    st.title("Drink Recommendation System")
 
     st.markdown("""
-    ### 🍷 Wine Recommendation
+    ### 🍷 Drink Recommendation
 
-    **Enter the name of your favorite wine below** to get personalized recommendations! ✨
+    **Enter the name of your favorite drink below** to get personalized recommendations! ✨
 
     ### 🔍 Find Your Next Favorite:
-    - Simply type the wine name and hit enter!
+    - Simply type the drink name and hit enter!
     - Explore new options tailored just for you.
 
-    Start your wine journey now! 🍇
+    Start your drink journey now! 🍇
     """)
 
-    st.markdown("# Enter a wine name:")
-    # User input for wine name
-    wine_name = st.text_input("Enter a wine name:", "")
+    st.markdown("# Enter a drink name:")
+    # User input for drink name
+    drink_name = st.text_input("Enter a drink name:", "")
     
-    if wine_name:
+    if drink_name:
         # Display recommendations
-        recommendations = recommend_wines(df, wine_name)
+        recommendations = recommend_drinks(df, drink_name)
         
         if isinstance(recommendations, str):
             st.write(recommendations)
         else:
-            st.write("Top wine recommendations:")
+            st.markdown("# Other drink from other brand that we recommend")
             create_blocks(recommendations )
 
 def main():
