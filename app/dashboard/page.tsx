@@ -23,7 +23,7 @@ export default function Dashboard() {
 
   return (
     <div>
-      <h1 className="w-3"> HELLO </h1>
+      
       
     </div>
   );
