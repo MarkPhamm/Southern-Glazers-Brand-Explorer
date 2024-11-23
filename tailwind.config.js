@@ -8,7 +8,26 @@ module.exports = {
     './components/**/*.{js,ts,jsx,tsx}', // For your components
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        southern: [
+          'SctoGroteskA-Light',
+          '-apple-system',
+          'BlinkMacSystemFont',
+          'Segoe UI',
+          'Roboto',
+          'Ubuntu',
+          'Helvetica Neue',
+          'Oxygen',
+          'Cantarell',
+          'sans-serif',
+        ],
+      },
+      colors:{
+        'custom-gray': '#3c3d41',
+        'custom-dark-yello': '#d1bf8f'
+      }
+    },
   },
   plugins: [],
 }
