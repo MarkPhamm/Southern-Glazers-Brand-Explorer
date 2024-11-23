@@ -53,7 +53,7 @@ function Page() {
     if (data.length > 0) {
       recommendWines('-196 CKTL VOD DBL LEM 12 CAN 6/4PK')
     }
-  }, [data])
+  }, [  ])
 
   return (
     <div>

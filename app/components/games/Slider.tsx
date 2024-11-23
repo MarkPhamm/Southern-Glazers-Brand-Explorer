@@ -9,8 +9,8 @@ const SweetnessBitternessSlider = () => {
     alPercentage: 0,
     acidityLevel: 0,
     tanninLevel: 0,
-    mouthFeel: "",
-    finish: "",
+    mouthFeel: "Silky",
+    finish: "Short",
   });
 
   const [suggestedWine, setSuggestedWine] = useState(""); // Suggested wine based on selections
@@ -21,10 +21,10 @@ const SweetnessBitternessSlider = () => {
   };
 
   // Function to suggest a wine based on selections
-  const suggestWine = () => {
-    setSuggestedWine(JSON.stringify(inputs, null, 2));
-    console.log(inputs);
-  };
+  // const suggestWine = () => {
+  //   setSuggestedWine(JSON.stringify(inputs, null, 2));
+  //   console.log(inputs);
+  // };
 
   // List of input elements to generate
   const inputElements = [
@@ -45,7 +45,26 @@ const SweetnessBitternessSlider = () => {
       type: "array",
       options: ["Short", "Medium", "Long"],
     },
+    
   ];
+  const suggestWine = async () => {
+    try {
+      const response = await fetch('/api/wine', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(inputs),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to fetch wine recommendation');
+      }
+  
+      const { bestWine } = await response.json();
+      setSuggestedWine(bestWine);
+    } catch (error) {
+      console.error('Error suggesting wine:', error);
+    }
+  };
 
   return (
     <div className="flex flex-col items-center justify-center p-6 bg-gray-100 min-h-screen">
@@ -105,13 +124,82 @@ const SweetnessBitternessSlider = () => {
       </div>
 
       {suggestedWine && (
-        <div className="mt-8 w-full max-w-lg bg-gray-50 shadow-md rounded-lg p-6">
-          <h3 className="text-lg font-bold text-gray-800 mb-4">Suggested Wine:</h3>
-          <pre className="whitespace-pre-wrap text-sm bg-gray-200 rounded-lg p-4 text-gray-800 overflow-auto">
-            {suggestedWine}
-          </pre>
+      <div className="mt-8 w-full max-w-lg bg-gray-50 shadow-md rounded-lg p-6">
+        <h3 className="text-lg font-bold text-gray-800 mb-4">Suggested Wine Details:</h3>
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <p className="font-medium text-gray-600">Brand Name:</p>
+            <p className="text-gray-800">{suggestedWine.corp_item_brand_name || "N/A"}</p>
+          </div>
+          <div>
+            <p className="font-medium text-gray-600">Flavor:</p>
+            <p className="text-gray-800">{suggestedWine.flavor || "N/A"}</p>
+          </div>
+          <div>
+            <p className="font-medium text-gray-600">Alcohol Percentage:</p>
+            <p className="text-gray-800">
+              {suggestedWine.alcohol_percentage
+                ? `${suggestedWine.alcohol_percentage}%`
+                : "N/A"}
+            </p>
+          </div>
+          <div>
+            <p className="font-medium text-gray-600">Sweetness Level:</p>
+            <p className="text-gray-800">{suggestedWine.sweetness_level || "N/A"}</p>
+          </div>
+          <div>
+            <p className="font-medium text-gray-600">Acidity Level:</p>
+            <p className="text-gray-800">{suggestedWine.acidity_level || "N/A"}</p>
+          </div>
+          <div>
+            <p className="font-medium text-gray-600">Tannin Level:</p>
+            <p className="text-gray-800">{suggestedWine.tannin_level || "N/A"}</p>
+          </div>
+          <div>
+            <p className="font-medium text-gray-600">Body:</p>
+            <p className="text-gray-800">{suggestedWine.body || "N/A"}</p>
+          </div>
+          <div>
+            <p className="font-medium text-gray-600">Serving Temperature:</p>
+            <p className="text-gray-800">{suggestedWine.serving_temperature || "N/A"}</p>
+          </div>
+          <div>
+            <p className="font-medium text-gray-600">Vintage Year:</p>
+            <p className="text-gray-800">{suggestedWine.vintage_year || "N/A"}</p>
+          </div>
+          <div>
+            <p className="font-medium text-gray-600">Grape Variety:</p>
+            <p className="text-gray-800">{suggestedWine.grape_variety || "N/A"}</p>
+          </div>
+          <div>
+            <p className="font-medium text-gray-600">Region:</p>
+            <p className="text-gray-800">{suggestedWine.region || "N/A"}</p>
+          </div>
+          <div>
+            <p className="font-medium text-gray-600">Price:</p>
+            <p className="text-gray-800">
+              {suggestedWine.price ? `$${suggestedWine.price.toFixed(2)}` : "N/A"}
+            </p>
+          </div>
+          <div>
+            <p className="font-medium text-gray-600">Food Pairing:</p>
+            <p className="text-gray-800">{suggestedWine.food_pairing || "N/A"}</p>
+          </div>
+          <div>
+            <p className="font-medium text-gray-600">Aroma:</p>
+            <p className="text-gray-800">{suggestedWine.aroma || "N/A"}</p>
+          </div>
+          <div>
+            <p className="font-medium text-gray-600">Mouthfeel:</p>
+            <p className="text-gray-800">{suggestedWine.mouthfeel || "N/A"}</p>
+          </div>
+          <div>
+            <p className="font-medium text-gray-600">Finish:</p>
+            <p className="text-gray-800">{suggestedWine.finish || "N/A"}</p>
+          </div>
         </div>
-      )}
+      </div>
+    )}
     </div>
   );
 };
