@@ -24,8 +24,11 @@ module.exports = {
         ],
       },
       colors:{
-        'custom-gray': '#3c3d41',
-        'custom-dark-yello': '#d1bf8f'
+        'custom-gray': '#959593',
+        'custom-dark-yello': '#d1bf8f',
+        'custom-brown': '#2a2a29',
+        'custom-yellow': '#d8c186',
+        'custom-black': '#4c473b',
       }
     },
   },
