@@ -1,64 +1,54 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { BsCart3 } from "react-icons/bs";
+import { IoMdMenu } from "react-icons/io";
 
 const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
-
   return (
     <div>
-      <nav className="bg-gray-800 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex-shrink-0">
-              <Link href="/" className="text-lg font-bold">
-                Southern Glazer's logo!
-              </Link>
-            </div>
-            <div className="hidden md:flex space-x-4">
-              <Link href="/" className="hover:text-gray-300">
-                Home
-              </Link>
-              <Link href="/about" className="hover:text-gray-300">
-                Games
-              </Link>
-              {/* <Link href="/services" className="hover:text-gray-300">
-                Services
-              </Link> */}
-              <Link href="/contact" className="hover:text-gray-300">
-                Contact
-              </Link>
-            </div>
-            <div className="md:hidden">
-              <button
-                onClick={toggleMenu}
-                className="text-gray-300 hover:text-white focus:outline-none focus:text-white"
-              >
-                <svg
-                  className="h-6 w-6"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d={isOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}
-                  />
-                </svg>
-              </button>
-            </div>
-          </div>
+      <nav className='fixed h-20 w-full bg-custom-brown shadow-lg flex flex-row justify-between items-center px-24 z-10'>
+        <div>
+          <a href="/">
+            <img src='https://upload.wikimedia.org/wikipedia/en/thumb/d/dc/Southern_Glazer%27s_Wine_%26_Spirits_Logo.svg/1200px-Southern_Glazer%27s_Wine_%26_Spirits_Logo.svg.png' alt="Logo" className='h-12'/>
+          </a>
+        </div>
+
+        <div>
+          <ul className='flex flex-row items-center space-x-6'>
+            <Link href={"/who"}>
+              <li className='nav-link text-l font-bold'>Who we are</li>
+            </Link>
+            <Link href={"/about"}>
+              <li className='nav-link text-l font-bold'>About</li>
+            </Link>
+            <Link href={"/games"}>
+              <li className='nav-link text-l font-bold'>Games</li>
+            </Link>
+            <Link href={"/explore"}>
+              <li className='nav-link text-l font-bold'>Explore</li>
+            </Link>
+            
+            {/* Cart Icon with Hover Effect */}
+            <span className='flex items-center justify-center cursor-pointer hover:bg-custom-yellow hover:text-custom-black transform hover:scale-150 hover:rounded-full transition-transform'>
+              <BsCart3 className='font-bold text-xl'></BsCart3>
+            </span>
+            
+            {/* Shop Proof Link */}
+            <Link href='https://shop.sgproof.com/'>
+              <div className='font-bold text-custom-black bg-custom-yellow px-4 py-1 rounded-2xl'>
+                Shop Proof
+              </div>
+            </Link>
+
+            {/* Menu Icon */}
+            <span>
+              <IoMdMenu className='text-2xl'></IoMdMenu>
+            </span>
+          </ul>
         </div>
       </nav>
     </div>
-  )
-}
+  );
+};
 
 export default Navbar;
