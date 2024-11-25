@@ -29,6 +29,7 @@ module.exports = {
         'custom-brown': '#2a2a29',
         'custom-yellow': '#d8c186',
         'custom-black': '#4c473b',
+        'custom-red': '#a01e21',
       }
     },
   },
