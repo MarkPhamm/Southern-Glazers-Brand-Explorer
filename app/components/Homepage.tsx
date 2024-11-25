@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Navbar from './Navbar';
+import Slider from '../components/games/Slider'
 
 const Homepage = () => {
+
+  const [selectedGame, setSelectedGame] = useState(null);
+
   return (
     <>
       <Navbar />
@@ -26,10 +30,16 @@ const Homepage = () => {
               <button className="bg-custom-red hover:bg-red-700 hover:scale-110 text-white font-bold py-2 px-4 mx-4 border-b-4 border-red-900 hover:border-red-950 rounded">
                 This Or That
               </button>
-              <button className="bg-yellow-600 hover:bg-yellow-400 hover:scale-110 text-white font-bold py-2 px-4 mx-4 border-b-4 border-yellow-700 hover:border-yellow-700 rounded">
+              <button onClick={() => setSelectedGame('slider')} className="bg-yellow-600 hover:bg-yellow-400 hover:scale-110 text-white font-bold py-2 px-4 mx-4 border-b-4 border-yellow-700 hover:border-yellow-700 rounded">
                 Slider
               </button>
-              
+            </div>
+            <div className='mt-8 w-full max-w-4xl'>
+              {selectedGame === 'slider' && (
+                <div className="bg-white p-8 rounded-lg shadow-md border border-gray-200">
+                  <Slider></Slider>
+                </div>
+              )}
             </div>
           </div>
         </div>
