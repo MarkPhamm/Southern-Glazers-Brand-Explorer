@@ -5,6 +5,7 @@ import AgeModal from './components/agemodal/AgeModal';
 import NavBar from './components/Navbar';
 // import ThisOrThat from './components/games/thisorthat'; // Assume this game is in the components folder
 import Slider from './components/games/Slider'; // Assume this game is in the components folder
+import Chatbot from './components/chatbot';
 
 export default function Home() {
   const [selectedGame, setSelectedGame] = useState(null);
@@ -12,6 +13,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-custom-gray">
       <NavBar />
+      <Chatbot/>
       <div className="flex flex-col items-center justify-center py-16">
         <h1 className="text-3xl font-southern text-white tracking-wide mb-8">
           Welcome to Southern Glazer's Recommendation System
