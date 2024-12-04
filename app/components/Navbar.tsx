@@ -18,20 +18,7 @@ const Navbar = () => {
                 Southern Glazer's logo!
               </Link>
             </div>
-            <div className="hidden md:flex space-x-4">
-              <Link href="/" className="hover:text-gray-300">
-                Home
-              </Link>
-              <Link href="/about" className="hover:text-gray-300">
-                Games
-              </Link>
-              {/* <Link href="/services" className="hover:text-gray-300">
-                Services
-              </Link> */}
-              <Link href="/contact" className="hover:text-gray-300">
-                Contact
-              </Link>
-            </div>
+          
             <div className="md:hidden">
               <button
                 onClick={toggleMenu}

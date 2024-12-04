@@ -25,7 +25,9 @@ module.exports = {
       },
       colors:{
         'custom-gray': '#3c3d41',
-        'custom-dark-yello': '#d1bf8f'
+        'custom-dark-yello': '#d1bf8f',
+        'custom-teal': '#008080',
+        'custom-white': '#ffffff'
       }
     },
   },
